@@ -210,3 +210,108 @@ def subSubMenuEliminarCategoria():
             case _:
                 print("Opción no implementada aún.")
                 input("Presione Enter para continuar...")
+
+def eliminarPorNombreChef():
+    sc.limpiar_pantalla()
+    chefs_data = cf.readJson(cfg.BD_CHEFS)
+
+    if not (chefs_data):
+        print("No hay chefs registrados.")
+        sc.pausar_pantalla()
+        return
+    
+    nombre_buscar = vd.validatetext("Ingrese el nombre del chef a eliminar: ").title().strip()
+    if not nombre_buscar:
+        print("ERROR: El nombre no puede estar vacío.")
+        sc.pausar_pantalla()
+        return
+    
+    eliminado = False
+    for chef in chefs_data.get("chefs", {}).values():
+        if chef.get("nombre", "").lower() == nombre_buscar.lower():
+            elemento_id = chef['id']
+            del chefs_data["chefs"][elemento_id]
+            cf.writeJson(cfg.BD_CHEFS, chefs_data)
+            print(f"Chef '{nombre_buscar}' eliminado con éxito.")
+            eliminado = True
+            break 
+
+    if not eliminado:
+        print(f"No se encontró ningún chef con el nombre '{nombre_buscar}'.")
+        
+    sc.pausar_pantalla()
+    return
+
+def eliminarPorIDChef():
+    sc.limpiar_pantalla()
+    chefs_data = cf.readJson(cfg.BD_CHEFS)
+
+    if not (chefs_data):
+        print("No hay chefs registrados.")
+        sc.pausar_pantalla()
+        return
+    
+    siConoce = vd.validateBoolean("¿Conoce el ID del chef a eliminar? (S/N): ")
+    if not siConoce:
+        eliminarPorNombreChef()
+        return
+    sc.limpiar_pantalla()
+    
+    if not chefs_data.get("chefs"):
+        print("No hay chefs registrados.")
+        sc.pausar_pantalla()
+        return
+    id_buscar = vd.validatetext("Ingrese el ID del chef a eliminar: ").strip()
+    if not id_buscar:
+        print("ERROR: El ID no puede estar vacío.")
+        sc.pausar_pantalla()
+        return
+        
+    eliminado = False
+
+    for chef in chefs_data.get("chef", {}).values():
+        if chef.get("id", "") == id_buscar:
+            elemento_id = chef['id']
+            del chefs_data["chefs"][elemento_id]
+            cf.writeJson(cfg.BD_CHEFS, chefs_data)
+            print(f"Chef con ID '{id_buscar}' eliminado con éxito.")
+            eliminado = True
+            break
+
+    if not eliminado:
+        print(f"No se encontró ningún chef con el ID '{id_buscar}'.")
+
+    sc.pausar_pantalla()
+    return
+
+
+def subSubMenuEliminarChef():
+    opcionesMenu = ["Eliminar por ID","Eliminar por nombre", "Regresar al menú principal"]
+    while True: 
+        sc.limpiar_pantalla()
+        print("=========================================")
+        print("         Eliminar ingredientes           ")
+        print("=========================================")
+        print("¿Qué opcion desea realizar?")
+        for i, opcion in enumerate(opcionesMenu, start=1):
+            print(f"{i}. {opcion}")
+        op = vd.validateInt("Selecciona una opción (1-6): ") - 1
+        
+        if op < 0 or op >= len(opcionesMenu): 
+            print("Opción no válida. Intente de nuevo.")
+            input("Presione Enter para continuar...")
+            continue 
+        
+        match op:
+            case 0:
+                eliminarPorIDChef()
+                sc.limpiar_pantalla()
+            case 1:
+                eliminarPorNombreChef()
+                sc.limpiar_pantalla()
+            case 2:
+                input("Presione Enter para continuar...")
+                return 
+            case _:
+                print("Opción no implementada aún.")
+                input("Presione Enter para continuar...")

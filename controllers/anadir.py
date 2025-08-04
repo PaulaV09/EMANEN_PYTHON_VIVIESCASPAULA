@@ -137,3 +137,104 @@ def anadirChef():
 
     print(f"\Chef '{nombre}' registrado con éxito con el ID: {id_chef}")
     sc.pausar_pantalla()
+
+
+def anadirHamburguesa():
+    sc.limpiar_pantalla()
+    hamburguesa_data = cf.readJson(cfg.BD_HAMBURGUESAS)
+    ingredientes_data = cf.readJson(cfg.BD_INGREDIENTES)
+    categorias_data = cf.readJson(cfg.BD_CATEGORIAS)
+    chefs_data = cf.readJson(cfg.BD_CHEFS)
+    chefs = chefs_data.get("chefs", {})
+    categorias = categorias_data.get("categorias", {})
+    ingredientes = ingredientes_data.get("ingredientes", {})
+
+    if not (ingredientes_data) and not (categorias_data):
+        print("No hay categorias o ingredientes registrados.")
+        sc.pausar_pantalla()
+        return
+
+    if not isinstance(hamburguesa_data, dict) or 'hamburguesas' not in hamburguesa_data:
+        hamburguesa_data = {"hamburguesas": {}}
+
+    print("-> Añadir un nueva hamburguesa")
+    nombre = vd.validatetext("Ingrese el nombre de la hamburguesa: ").title().strip()
+    for hamburguesa in hamburguesa_data.get("hamburguesas", {}).values():
+        if hamburguesa.get("nombre", "").lower() == nombre.lower():
+            print(f"Error: La hamburguesa con el nombre '{nombre}' ya está registrada.")
+            sc.pausar_pantalla()
+            return
+    if not nombre:
+        print("ERROR: El nombre del ingrediente no puede estar vacío.")
+        sc.pausar_pantalla()
+        return
+    
+    print("----Lista de categorias----")
+    for cod, categoria in categorias.items():
+        print(f"{cod}: {categoria['nombre']}")
+
+    id = input("Id de la categoria: ")
+
+    if id not in categorias:
+        print("Código no válido.")
+        return
+    
+    categoria = categorias[id]['nombre']
+
+    ingredientes_copy = ingredientes.copy()
+    agregarIngredientes = True
+    ingredientesHamburguesa = []
+    while agregarIngredientes:
+        sc.limpiar_pantalla()
+        print("----Lista de ingredientes disponibles----")
+        for cod, ingrediente in ingredientes_copy.items():
+            print(f"{cod}: {ingrediente['nombre']}")
+
+        id = input("Id del ingrediente a seleccionar: ")
+
+        if id not in ingredientes_copy:
+            print("Código no válido.")
+            return
+        
+        ingredienteHamburguesa = ingredientes_copy[id]['nombre']
+        ingredientesHamburguesa.append(ingredienteHamburguesa)
+        agregarIngredientes = vd.validateBoolean("Desea agregar otro ingrediente? (S/N)")
+
+    precio = vd.validatefloat("Ingrese el precio del ingrediente: ")
+    if precio < 0:
+        print("ERROR: El precio del ingrediente debe ser superior a 0")
+        sc.pausar_pantalla()
+        return
+    
+    print("----Lista de chefs----")
+    for cod, chef in chefs.items():
+        print(f"{cod}: {chef['nombre']}")
+
+    id = input("Id del chef: ")
+
+    if id not in chefs:
+        print("Código no válido.")
+        return
+    
+    chef = chefs[id]['nombre']
+    
+    if not hamburguesa_data.get("hamburguesas"):
+        id_hamburguesa = "1"
+    else:
+        max_id = max(int(k) for k in hamburguesa_data["hamburguesas"].keys())
+        id_hamburguesa = str(max_id + 1)
+
+    nueva_hamburguesa = {
+        "id": id_hamburguesa,
+        "nombre": nombre,
+        "categoria": categoria,
+        "ingredientes": ingredientesHamburguesa,
+        "precio" : precio,
+        "chef" : chef
+    }
+    
+    hamburguesa_data["hamburguesas"][id_hamburguesa] = nueva_hamburguesa
+    cf.writeJson(cfg.BD_HAMBURGUESAS, hamburguesa_data)
+
+    print(f"\nHamburguesa'{nombre}' registrada con éxito con el ID: {id_hamburguesa}")
+    sc.pausar_pantalla()

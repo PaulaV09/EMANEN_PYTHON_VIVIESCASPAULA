@@ -82,3 +82,41 @@ def editarCategoria():
     cf.writeJson(cfg.BD_CATEGORIAS, data)
     print("Categoria actualizada correctamente.")
     sc.pausar_pantalla()
+
+def editarChef():
+    sc.limpiar_pantalla()
+    print("\n--- Chefs disponibles ---")
+    data = cf.readJson(cfg.BD_CHEFS)
+    chefs = data.get("chefs", {})
+
+    if not chefs:
+        print("No hay chefs.")
+        sc.pausar_pantalla()
+        return
+
+    for cod, chef in chefs.items():
+        print(f"{cod}: {chef['nombre']}")
+
+    id = input("Id del chef a editar: ")
+
+    if id not in chefs:
+        print("Código no válido.")
+        return
+    
+    chef = chefs[id]
+    sc.limpiar_pantalla()
+    print("\n--- Datos actuales ---")
+    for k, v in chef.items():
+        print(f"{k.capitalize()}: {v}")
+
+    nombre = vd.validatetext("Nuevo nombre (enter para mantener): ").title().strip()
+    especialidad = vd.validatetext("Nueva especialidad (enter para mantener): ").title().strip()
+
+    chef["nombre"] = nombre or chef["nombre"]
+    chef["descripcion"] = especialidad or chef["descripcion"]
+
+    chefs[id] = chef
+    data["chefs"] = chefs
+    cf.writeJson(cfg.BD_CHEFS, data)
+    print("Chef actualizado correctamente.")
+    sc.pausar_pantalla()

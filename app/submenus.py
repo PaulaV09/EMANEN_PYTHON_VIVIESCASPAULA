@@ -113,11 +113,14 @@ def gestion_chefs():
                 cv.verChef()
                 sc.limpiar_pantalla()
             case 2:
-                pass
+                cb.subSubMenuBuscarChef()
+                sc.limpiar_pantalla()
             case 3:
-                pass
+                ce.editarChef()
+                sc.limpiar_pantalla()
             case 4:
-                pass
+                cel.subSubMenuEliminarChef()
+                sc.limpiar_pantalla()
             case 5:
                 input("Presione Enter para continuar...")
                 return 
@@ -144,7 +147,8 @@ def gestion_hamburguesas():
         
         match op:
             case 0:
-                pass
+                ca.anadirHamburguesa()
+                sc.limpiar_pantalla()
             case 1:
                 pass
             case 2:
