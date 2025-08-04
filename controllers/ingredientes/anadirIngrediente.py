@@ -2,7 +2,6 @@ import utils.corefiles as cf
 import utils.screenControllers as sc
 import utils.validateData as vd
 import config as cfg
-from tabulate import tabulate # type: ignore
 
 def anadirIngrediente():
     sc.limpiar_pantalla()
@@ -11,7 +10,7 @@ def anadirIngrediente():
         ingredientes_data = {"ingredientes": {}}
 
     print("-> Añadir un nuevo ingrediente")
-    nombre = vd.validate_string("Ingrese el nombre del ingrediente: ").title().strip()
+    nombre = vd.validatetext("Ingrese el nombre del ingrediente: ").title().strip()
     for ingrediente in ingredientes_data.get("ingredientes", {}).values():
         if ingrediente.get("nombre", "").lower() == nombre.lower():
             print(f"Error: El ingrediente con el nombre '{nombre}' ya está registrado.")
@@ -55,30 +54,4 @@ def anadirIngrediente():
     cf.writeJson(cfg.BD_INGREDIENTES, ingredientes_data)
 
     print(f"\nIngrediente '{nombre}' registrado con éxito con el ID: {id_ingrediente}")
-    sc.pausar_pantalla()
-
-def verIngredientes():
-    sc.limpiar_pantalla()
-    ingredientes_data = cf.readJson(cfg.BD_INGREDIENTES)
-    ingredientes = ingredientes_data.get("ingredientes", {})
-
-    if not ingredientes:
-        print("No hay ingredientes registrados.")
-        sc.pausar_pantalla()
-        return
-    
-    print("-------Ingredientes------")
-
-    tabla = []
-    headers = ["ID", "Nombre", "Descripcion", "Precio", "Stock"]
-    for cod, ingrediente in ingredientes.items():
-        tabla.append([
-            cod,
-            ingrediente.get("nombre", "N/A"),
-            ingrediente.get("descripcion", "N/A"),
-            ingrediente.get("precio", "N/A"),
-            ingrediente.get("stock", "N/A")
-        ])
-
-    print(tabulate(tabla, headers=headers, tablefmt="fancy_grid"))
     sc.pausar_pantalla()

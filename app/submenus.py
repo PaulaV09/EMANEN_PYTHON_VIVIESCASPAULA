@@ -2,7 +2,11 @@ import os
 import utils.screenControllers as sc
 import utils.validateData as vd
 import config as cfg
-import controllers.ingredientes as ci
+import controllers.anadir as ca
+import controllers.ver as cv
+import controllers.buscar as cb
+import controllers.editar as ce
+import controllers.eliminar as cel
 
 def gestion_ingredientes():
     opcionesMenu = ["Crear ingrediente","Ver ingredientes","Buscar ingrediente", "Editar ingrediente", "Eliminar ingrediente","Regresar al menú principal"]
@@ -23,17 +27,20 @@ def gestion_ingredientes():
         
         match op:
             case 0:
-                ci.anadirIngrediente()
+                ca.anadirIngrediente()
                 sc.limpiar_pantalla()
             case 1:
-                ci.verIngredientes()
+                cv.verIngredientes()
                 sc.limpiar_pantalla()
             case 2:
-                pass
+                cb.subSubMenuBuscarIngrediente()
+                sc.limpiar_pantalla()
             case 3:
-                pass
+                ce.editarIngrediente()
+                sc.limpiar_pantalla()
             case 4:
-                pass
+                cel.subSubMenuEliminarIngrediente()
+                sc.limpiar_pantalla()
             case 5:
                 input("Presione Enter para continuar...")
                 return 
@@ -60,15 +67,20 @@ def gestion_categorias():
         
         match op:
             case 0:
-                pass
+                ca.anadirCategoria()
+                sc.limpiar_pantalla()
             case 1:
-                pass
+                cv.verCategorias()
+                sc.limpiar_pantalla()
             case 2:
-                pass
+                cb.subSubMenuBuscarCategoria()
+                sc.limpiar_pantalla()
             case 3:
-                pass
+                ce.editarCategoria()
+                sc.limpiar_pantalla()
             case 4:
-                pass
+                cel.subSubMenuEliminarCategoria()
+                sc.limpiar_pantalla()
             case 5:
                 input("Presione Enter para continuar...")
                 return 
@@ -95,9 +107,11 @@ def gestion_chefs():
         
         match op:
             case 0:
-                pass
+                ca.anadirChef()
+                sc.limpiar_pantalla()
             case 1:
-                pass
+                cv.verChef()
+                sc.limpiar_pantalla()
             case 2:
                 pass
             case 3:
