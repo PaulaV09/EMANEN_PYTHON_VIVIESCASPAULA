@@ -7,4 +7,4 @@ Descripción: Sistema de gestion de inventario de una hamburgueseria
 import app.mainmenu as mainmenu
 
 if __name__ == "__main__":
-        mainmenu.prueba()
+        mainmenu.main_menu()
